@@ -12,6 +12,10 @@ class _SignUpWithEmailScreenState extends State<SignUpWithEmailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffe20613),
+        elevation: 0,
+      ),
       body: Stack(
         children: [
           Container(
@@ -26,35 +30,19 @@ class _SignUpWithEmailScreenState extends State<SignUpWithEmailScreen> {
               ),
             ),
           ),
-          Positioned(
-            top: 50,
-            left: 10,
-            child: Container(
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back),
-                color: Colors.white,
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Container(
               alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 30, left: 20, right: 20, bottom: 10),
+                    top: 0, left: 20, right: 20, bottom: 10),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 70.0),
-                      child: Text(
-                        'Create Account',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(

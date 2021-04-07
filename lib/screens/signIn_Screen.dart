@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   static const route = '/SignInScreen';
@@ -11,6 +14,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xffe20613),
+        elevation: 0,
+      ),
       body: Stack(
         children: [
           Container(
@@ -25,36 +32,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          Positioned(
-            top: 50,
-            left: 10,
-            child: Container(
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(Icons.arrow_back),
-                color: Colors.white,
-              ),
-            ),
-          ),
           SingleChildScrollView(
             child: Container(
               alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: 30, left: 20, right: 20, bottom: 10),
+                    top: 0, left: 20, right: 20, bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 70.0),
-                      child: Text(
-                        'Log In',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Text(
+                      'Log In',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(
@@ -102,6 +93,15 @@ class _SignInFormState extends State<SignInForm> {
     if (user != null) {
       Navigator.pop(context);
     } else {}
+  }
+
+  void showErrSnackBar(
+      {String message = 'Error Occurred', Color background = Colors.red}) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: background,
+      duration: Duration(seconds: 1),
+    ));
   }
 
   @override
@@ -208,64 +208,159 @@ class _SignInFormState extends State<SignInForm> {
               alignment: Alignment.center,
               child: Column(
                 children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            child: Image.asset('assets/facebooklogo.png'),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text('Log In with facebook')
-                        ],
-                      ),
-                    ),
-                  ),
+                  FacebookButton(showErr: showErrSnackBar),
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(25)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 40,
-                            width: 40,
-                            child: Image.asset('assets/googlelogo.png'),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(
-                            'Log In with Google',
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  GoogleButton(showErr: showErrSnackBar),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class GoogleButton extends StatelessWidget {
+  final Function showErr;
+
+  const GoogleButton({this.showErr});
+
+  signInWithGoogle() async {
+    print(' step 1--------------------------------------------');
+    GoogleSignIn googleSignIn = GoogleSignIn();
+    GoogleSignInAccount googleAccount = await googleSignIn.signIn();
+
+    print(
+        '${googleAccount.authentication}--------------------------------------------');
+    if (googleAccount != null) {
+      GoogleSignInAuthentication googleAuth =
+          await googleAccount.authentication;
+      print(' step 2--------------------------------------------');
+      if (googleAuth.idToken != null && googleAuth.accessToken != null) {
+        print(
+            '${googleAuth.idToken}--------------------------------------------');
+        final authResult = await FirebaseAuth.instance.signInWithCredential(
+          GoogleAuthProvider.credential(
+            idToken: googleAuth.idToken,
+            accessToken: googleAuth.accessToken,
+          ),
+        );
+        print(
+            '${authResult.user}-----------------------------------------user here');
+
+        //return _userFromFirebase(authResult.user);
+      } else {
+        throw PlatformException(
+          code: 'ERROR_MISSING_GOOGLE_AUTH_TOKEN',
+          message: 'Missing Google Authentication Token',
+        );
+      }
+    } else {
+      throw PlatformException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign In aborted by user',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        try {
+          await signInWithGoogle();
+        } catch (e) {
+          showErr();
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: BoxDecoration(
+            color: Colors.white, borderRadius: BorderRadius.circular(25)),
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 35,
+                width: 35,
+                child: Image.asset('assets/googlelogo.png'),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                'Sign Up with Google',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FacebookButton extends StatelessWidget {
+  final Function showErr;
+
+  const FacebookButton({this.showErr});
+
+  signInWithFacebook() async {
+    final facebookLogin = FacebookLogin();
+    final facebookAccount =
+        await facebookLogin.logIn(['public_profile', 'email']);
+
+    if (facebookAccount != null &&
+        facebookAccount.status == FacebookLoginStatus.loggedIn) {
+      final authResult = await FirebaseAuth.instance.signInWithCredential(
+        FacebookAuthProvider.credential(facebookAccount.accessToken.token),
+      );
+      print(authResult.user);
+    } else {
+      throw PlatformException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign In aborted by user',
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        try {
+          await signInWithFacebook();
+        } catch (e) {
+          showErr();
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: BoxDecoration(
+            color: Colors.blue, borderRadius: BorderRadius.circular(25)),
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                child: Image.asset('assets/facebooklogo.png'),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text('Sign Up with facebook')
+            ],
+          ),
         ),
       ),
     );

@@ -3,8 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const route = '/homeScreen';
+class ProfileScreen extends StatelessWidget {
+  static const route = '/profileScreen';
+  logout() async {
+    final googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
+    final facebookLogin = FacebookLogin();
+    await facebookLogin.logOut();
+    await FirebaseAuth.instance.signOut();
+    print('signouted');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,15 +21,11 @@ class HomeScreen extends StatelessWidget {
         child: Container(
           color: Colors.yellow,
           child: TextButton(
+            child: Text('logout'),
             onPressed: () async {
-              final googleSignIn = GoogleSignIn();
-              await googleSignIn.signOut();
-              final facebookLogin = FacebookLogin();
-              await facebookLogin.logOut();
-              await FirebaseAuth.instance.signOut();
-              print('signouted');
+              await logout();
+              Navigator.pop(context);
             },
-            child: Text('Sign out'),
           ),
         ),
       ),

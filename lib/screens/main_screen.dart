@@ -41,51 +41,79 @@ class _MainScreenState extends State<MainScreen> {
         ),
         Container(
           alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/logo.png',
-                height: 300,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              FacebookButton(showErr: showErrSnackBar),
-              SizedBox(
-                height: 15,
-              ),
-              GoogleButton(showErr: showErrSnackBar),
-              SizedBox(
-                height: 40,
-              ),
-              EmailButton(),
-              SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Already Have an account ?'),
-                  SizedBox(
-                    width: 30,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, LoginScreen.route);
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              //mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Stack(
+                  children: [
+                    Image.asset(
+                      'assets/logo.png',
+                      height: 350,
+                    ),
+                    Positioned(
+                      top: 300,
+                      left: 97,
+                      child: Column(
+                        children: [
+                          Text(
+                            'B World',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Live Leam Level Up !',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              )
-            ],
+                  ],
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                FacebookButton(showErr: showErrSnackBar),
+                SizedBox(
+                  height: 15,
+                ),
+                GoogleButton(showErr: showErrSnackBar),
+                SizedBox(
+                  height: 40,
+                ),
+                EmailButton(),
+                SizedBox(
+                  height: 40,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Already Have an account ?'),
+                    SizedBox(
+                      width: 30,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, LoginScreen.route);
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ]),
@@ -182,8 +210,8 @@ class GoogleButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                height: 40,
-                width: 40,
+                height: 35,
+                width: 35,
                 child: Image.asset('assets/googlelogo.png'),
               ),
               SizedBox(
@@ -240,7 +268,7 @@ class FacebookButton extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         decoration: BoxDecoration(
-            color: Colors.blue, borderRadius: BorderRadius.circular(25)),
+            color: Color(0xff5890FF), borderRadius: BorderRadius.circular(25)),
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Row(

@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:starter_app/screens/SignUp_with_email.dart';
-import 'package:starter_app/screens/home_screen.dart';
 import 'package:starter_app/screens/landing_screen.dart';
 import 'package:starter_app/screens/signIn_Screen.dart';
+
+import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/home_screen.dart';
+import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/profile_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
         SignUpWithEmailScreen.route: (ctx) => SignUpWithEmailScreen(),
         LoginScreen.route: (ctx) => LoginScreen(),
         HomeScreen.route: (ctx) => HomeScreen(),
+        ProfileScreen.route: (ctx) => ProfileScreen(),
       },
     );
   }

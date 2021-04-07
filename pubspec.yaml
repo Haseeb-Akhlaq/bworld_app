@@ -33,6 +33,9 @@ dependencies:
   google_sign_in: ^5.0.1
   firebase_auth: ^1.0.1
   flutter_facebook_login: ^3.0.0
+  http: ^0.13.1
+  youtube_player_flutter: ^8.0.0
+
 
 dev_dependencies:
   flutter_test:
