@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/podcast_screen.dart';
-import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/select_screen.dart';
-import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/youtube_videos_screen.dart';
+import './podcast_screen.dart';
+import './select_screen.dart';
+import './youtube_videos_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const route = '/homeScreen';

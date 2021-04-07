@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:starter_app/models/video_model.dart';
 import 'package:starter_app/services/api_services.dart';
 
-import 'file:///C:/Users/haseeb/AndroidStudioProjects/starter_app/lib/screens/bottom_nav_bar/video_screen.dart';
+import './video_screen.dart';
 
 class YoutubeVideosScreen extends StatefulWidget {
   final Function changeScreen;
