@@ -53,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) {
           setState(() {
@@ -63,7 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
           SelectScreen(
             changeScreen: changeIndex,
           ),
-          PodcastsScreen(),
+          PodcastsScreen(
+            changeScreen: changeIndex,
+          ),
           YoutubeVideosScreen(
             changeScreen: changeIndex,
           ),

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:starter_app/models/video_model.dart';
 
-import '../../models/video_model.dart';
 import '../utilities/keys.dart';
 
 class APIService {
