@@ -1,14 +1,14 @@
 
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.starter_app">
+    package="com.wesdok.bworldapp">
 
 
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:label="starter_app"
+        android:label="b_world_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
