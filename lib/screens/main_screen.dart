@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:ui';
 
+import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,16 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: background,
       duration: Duration(seconds: 1),
     ));
+  }
+
+  @override
+  void initState() {
+    if (Platform.isIOS) {
+      AppleSignIn.onCredentialRevoked.listen((_) {
+        print("Credentials revoked");
+      });
+    }
+    super.initState();
   }
 
   @override
@@ -85,6 +97,13 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 GoogleButton(showErr: showErrSnackBar),
                 SizedBox(
+                  height: 15,
+                ),
+                if (Platform.isIOS)
+                  AppleButton(
+                    showErr: showErrSnackBar,
+                  ),
+                SizedBox(
                   height: 40,
                 ),
                 EmailButton(),
@@ -117,6 +136,76 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
       ]),
+    );
+  }
+}
+
+class AppleButton extends StatelessWidget {
+  final Function showErr;
+
+  const AppleButton({this.showErr});
+
+  appleLogin() async {
+    if (await AppleSignIn.isAvailable()) {
+      final AuthorizationResult result = await AppleSignIn.performRequests([
+        AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName])
+      ]);
+
+      switch (result.status) {
+        case AuthorizationStatus.authorized:
+          print(result.credential.user);
+          break;
+        case AuthorizationStatus.error:
+          print("Sign in failed: ${result.error.localizedDescription}");
+          throw 'error';
+          break;
+        case AuthorizationStatus.cancelled:
+          print('User cancelled');
+          throw 'error';
+          break;
+      }
+    } else {
+      throw 'error';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        try {
+          await appleLogin();
+        } catch (e) {
+          showErr();
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        decoration: BoxDecoration(
+            color: Colors.black, borderRadius: BorderRadius.circular(25)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 30,
+                width: 30,
+                child: Image.asset('assets/apple.png'),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                'Sign In with Apple',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
